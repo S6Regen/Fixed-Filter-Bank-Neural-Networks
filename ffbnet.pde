@@ -3,15 +3,15 @@ float[] work;
 void setup() {
 
   for (int i=1; i<20; i++) {
-    work=new float[2048];
+    work=new float[256];
     work[1]=1f;
-    net=new FFBNet(2048, i);
+    net=new FFBNet(256, i);
     net.recall(work, work);
     float sum=0;
     for (int j=0; j<work.length; j++) {
       sum+=work[j]*work[j];
     }
-    println(i+"   "+sum);
+    println(i+"   "+sum);  //Check vector length through the (random) net is approximately okay
   }
 }
 
@@ -32,8 +32,8 @@ class FFBNet {
     this.vecLen=2*inputLen;// double up the input dimension to allow ResNet type behavior etc.
     this.depth=depth;
     double s=Math.sqrt(1.0/vecLen); //scaling for 1 WHT
-    sc=(float)(Math.sqrt(2.0)*s*Math.pow(s, 1.0/depth)); //scaling for switch slope function, WHT and final WHT
-    buffer=new float[vecLen];
+    sc=(float)(1.7*s*Math.pow(s, 1.0/depth)); // scaling for switch slope function, WHT and final WHT
+    buffer=new float[vecLen];                 // 1.7=magic number obtained by trial and error
     weights=new float[2*depth*vecLen];
     for (int i=0; i<weights.length; i++) {
       weights[i]=1f-2f*(float)Math.random(); // random initialization between -1 and 1
@@ -42,25 +42,18 @@ class FFBNet {
  //<>//
   void recall(float[] resultVec, float[] inVec) {
     adjust(inVec); // copy inVec to buffer (lower and upper halves) and adjust vector length to a constant value
-    signFlip(); // Sign flip the elements of buffer according to a random but fixed pattern (same every time.)
-    int wIdx=0;
-    for (int i=0; i<depth; i++) { //This mixes up the frequency spectrum to get a relatively well spread out response through the filter bank
+    signFlip(); // Sign flip the elements of buffer according to a random but fixed pattern (same every time.) -
+    int wIdx=0; // - This mixes up the frequency spectrum to get a relatively well spread out response through the filter bank
+    for (int i=0; i<depth; i++) { 
       wht();	// Fixed filter bank (Walsh Hadamard transform).  Fast fixed weighted sums! O(nlog(n)).
       for (int j=0; j<vecLen; j++, wIdx+=2) {
         float b=buffer[j];
-        buffer[j]=sc*(b<0f? b*weights[wIdx]:b*weights[wIdx+1]);
+        buffer[j]=sc*(b<0f? b*weights[wIdx]:b*weights[wIdx+1]);  // Switch slope at zero nonlinear function
       }
     }
     wht();  // Final WHT  // Smooths out switching noise from nonlinear functions etc.
     System.arraycopy(buffer, 0, resultVec, 0, resultVec.length);
   }
-
-  // Switch slope at zero nonlinear function
-  // Check the sign of the elements of buffer[] and multipy element by one slope or another depending on that.
-  // Also include a scaling operation both for the function itself and the WHTs
-  // To keep the vector length through the network resonable 
-  void switchSlope() {
-  }  
 
   // Walsh Hadamard Transform of buffer
   // No scaling appled (vector length after transform is greater)
