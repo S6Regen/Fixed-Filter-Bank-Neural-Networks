@@ -6,4 +6,4 @@ In a conventional artificial neural network a fixed nonlinear function is applie
 An alternative:
 You can use the fast Walsh Hadamard transform or the FFT as a fixed filter bank that requires only n.log_base_2(n) operations but then you must make the nonlinear functions indivually adjustable to produce the wanted responses.  One suitable parameterized nonlinear function with nice properties is a switch slope at zero function.  f(x)=a.x x>=0, f(x)=b.x x<0.
 
-Book and library containing useful transforms (e.g Walsh or Hadamard or Walsh Hadamard): https://www.jjj.de/fxt/
+Book and library containing useful transforms: https://www.jjj.de/fxt/
