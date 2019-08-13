@@ -30,22 +30,23 @@ class FFBNet {
 
   void recall(float[] resultVec, float[] inVec) {
     adjust(inVec); // copy inVec to buffer (lower and upper halves) and adjust vector length to a constant value
-    signFlip(); // Sign flip the elements of buffer according to a random but fixed pattern
-    for (int i=0; i<depth; i++) {
-      wht();
-      scaleAdj();
-      switchSlope();
+    signFlip(); // Sign flip the elements of buffer according to a random but fixed pattern (same every time.)
+    for (int i=0; i<depth; i++) { //This mixes up the frequency spectrum to get a relatively well spread out response through the filter bank
+      wht();	// Fixed filter bank (Walsh Hadamard transform).  Fast fixed weighted sums! O(nlog(n)).
+      switchSlope(); // Parameterized nonlinear functions
     }
-    wht();  // Final WHT
+    wht();  // Final WHT  // Smooths out switching noise from nonlinear functions etc.
     System.arraycopy(buffer, 0, resultVec, 0, resultVec.length);
   }
 
   // Switch slope at zero nonlinear function
   // Check the sign of the elements of buffer[] and multipy element by one slope or another depending on that.
+  // Also include a scaling operation both for the function itself and the WHTs
+  // To keep the vector length through the network resonable 
   void switchSlope() {
     for (int i=0, wIdx=0; i<vecLen; i++, wIdx+=2) {
       float b=buffer[i];
-      buffer[i]=b<0f? b*weights[wIdx]:b*weights[wIdx+1];
+      buffer[i]=sc*(b<0f? b*weights[wIdx]:b*weights[wIdx+1]);
     }
   }  
 
@@ -68,15 +69,6 @@ class FFBNet {
         i+=hs;
       }
       hs+=hs;
-    }
-  }
-
-  // Scale the buffer to compensate for the effects of the WHT, switchSlope function and the final WHT.
-  // The scaling could be combined as a single step however, depending on depth, floating point overflow
-  // may make that impossible.
-  void scaleAdj() {
-    for (int i=0; i<vecLen; i++) {
-      buffer[i]=sc*buffer[i];
     }
   }
 
@@ -108,4 +100,3 @@ class FFBNet {
     }
   }
 }
-
