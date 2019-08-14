@@ -1,6 +1,9 @@
 # Fixed-Filter-Bank-Neural-Networks
 Adjust the nonlinear functions rather than the filter bank.
 
+"You can lead a horse to water but you can't make them think.
+ Horses don't dig on DSP" - Mahatma Gandhi
+
 In a conventional artificial neural network a fixed nonlinear function is applied to the elements of a vector and then multiple filters (ie. weighed sums) are adjusted to produce the wanted responses, per layer. For a fully connected layer this takes n squared fused multiply accumulates.  A hefty computational burden and there are viewpoints you can take that suggest this is a very inefficient use of weight parameters.
 
 An alternative:
