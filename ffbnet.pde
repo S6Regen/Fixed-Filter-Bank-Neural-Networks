@@ -1,22 +1,82 @@
-FFBNet net;
+// Fixed filter bank neural networks in the processing language (Java+easy graphics etc.)
+// www.processing.org
+// Rather than use n adjustable weighted sums per layer which take about n squared operations
+// use n fixed weighted sums that can be computed efficiently using a transform (eg. FFT, WHT.)
+// However something must bend, you make the nonlinear functions individually adjustable by
+// parameterizing them.
+// It's a swap around from a conventional neural network with has adjustable weighted sum filters
+// and a fixed nonlinear function, to a fixed filter bank and adjustable nonlinear functions.
+// The computational cost is cut from n squared operations per layer to n.log(n) operations.
+FFBNet parent;
+FFBNet child;
+float parentCost;
+float[][] inputVecs;
+float[][] targetVecs;
 float[] work;
-void setup() {
+int dim=64;
+int layerDepth=5;
+int mutate=25;
+float precision=25f;
 
-  for (int i=1; i<20; i++) {
-    work=new float[1024];
-    work[1]=1f;
-    net=new FFBNet(1024, i);
-    net.recall(work, work);
-    float sum=0;
-    for (int j=0; j<work.length; j++) {
-      sum+=work[j]*work[j];
+void setup() {
+  work=new float[dim];
+  inputVecs=new float[dim][];
+  targetVecs=new float[dim][];
+  for (int i=0; i<dim; i++) {
+    inputVecs[i]=new float[dim];
+    targetVecs[i]=new float[dim];
+    inputVecs[i][i]=1f;
+    for (int j=0; j<dim; j++) {
+      targetVecs[i][j]=sin(0.002*(i+dim)*j);
     }
-    println(i+"   "+sum);  //Check vector length through the (random) net is approximately okay
   }
+  parentCost=Float.POSITIVE_INFINITY;
+  parent=new FFBNet(dim, layerDepth);
+  child=new FFBNet(dim, layerDepth);
+  size(256, 256);
+  frameRate(100);
 }
 
 void draw() {
-}
+  for (int iter=0; iter<1000; iter++) {
+    System.arraycopy(parent.weights, 0, child.weights, 0, parent.weights.length);
+    for (int i=0; i<mutate; i++) {
+      int rIdx=(int)random(0, child.weights.length);
+      float v=child.weights[rIdx];
+      float m=2f*exp(random(-precision, 0f));
+      if (random(-1f, 1f)<0f) m=-m;
+      m+=v;
+      if (m>1f) m=v;
+      if (m<-1f) m=v;
+      child.weights[rIdx]=m;
+    }
+    float childCost=0f;
+    for (int i=0; i<dim; i++) {
+      child.recall(work, inputVecs[i]);
+      for (int j=0; j<dim; j++) {
+        float d=targetVecs[i][j]-work[j];
+        childCost+=d*d;
+      }
+    }
+    if (childCost<parentCost) {
+      parentCost=childCost;
+      float[] t=parent.weights;
+      parent.weights=child.weights;
+      child.weights=t;
+    }
+  }
+  int ex=frameCount%dim;
+  java.util.Arrays.fill(work, 0f);
+  work[ex]=1f;
+  parent.recall(work, work);
+  background(0); // clear screen
+  for (int i=0; i<dim; i++) {
+    fill(255, 0, 127); // draw color
+    ellipse(i*4, 127+ 120*targetVecs[ex][i], 5, 5);
+    fill(127, 0, 255); // draw color
+    ellipse(i*4, 127+120*work[i], 5, 5);
+  }
+}  
 
 // Fixed Filter Bank Neural Network 
 class FFBNet { 
@@ -70,7 +130,8 @@ class FFBNet {
         float b=buffer[j];
         // switch slope at zero nonlinear function
         // with scaling factor sc for WHTs, nonlinear function
-        buffer[j]=sc*(b<0f? b*weights[wIdx]:b*weights[wIdx+1]);
+        float wt=b<0f?  weights[wIdx]:weights[wIdx+1];
+        buffer[j]=sc*b*wt;
       }
     }
     whtBuffer();  // final WHT, smooths out switching noise from nonlinear functions etc.
