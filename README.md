@@ -6,7 +6,7 @@ In a conventional artificial neural network a fixed nonlinear function is applie
 An alternative:
 You can use the fast Walsh Hadamard transform (WHT) or the FFT as a fixed filter bank that requires only n.log_base_2(n) operations but then you must make the nonlinear functions individually adjustable to produce the wanted responses.  One suitable parameterized nonlinear function with nice properties is a switch slope at zero function.  f(x)=a.x x>=0, f(x)=b.x x<0.
 
-I presume you could use back-propagation as the WHT is self-inverse and use that to update the function parameters.
+I presume you could use back-propagation (as the WHT is self-inverse) to update the function parameters.
 However I used an evolutionary algorithm for training: www.cs.bham.ac.uk/~jer/papers/ctsgray.pdf
 
 Condensed information about the WHT: https://github.com/FALCONN-LIB/FFHT/issues/26
