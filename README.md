@@ -14,3 +14,6 @@ Condensed information about the WHT: https://github.com/FALCONN-LIB/FFHT/issues/
 Book and library containing some other transforms: https://www.jjj.de/fxt/
 
 The WHT and the central limit theorem: https://archive.org/details/bitsavers_mitreESDTe69266ANewMethodofGeneratingGaussianRando_2706065
+
+
+The .pde files can be run using the Java version of Processing sketching/prototyping environment:  www.processing.org 
