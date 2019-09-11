@@ -17,3 +17,5 @@ The WHT and the central limit theorem: https://archive.org/details/bitsavers_mit
 
 
 The .pde files can be run using the Java version of Processing sketching/prototyping environment:  www.processing.org 
+
+A little more info.  https://discourse.numenta.org/t/fixed-filter-bank-neural-networks/6392
