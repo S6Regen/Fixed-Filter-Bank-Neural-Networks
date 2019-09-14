@@ -19,3 +19,8 @@ The WHT and the central limit theorem: https://archive.org/details/bitsavers_mit
 The .pde files can be run using the Java version of Processing sketching/prototyping environment:  www.processing.org 
 
 A little more info.  https://discourse.numenta.org/t/fixed-filter-bank-neural-networks/6392
+
+A common thread here is that a conventional artificial neural network with the ReLU activation function is a system that switches between different projections of the input to the output.  As does the fixed filter bank neural network.
+It is possible there are even more efficient projection switching systems, perhaps based on the hstep() function in the out of place Walsh Hadamard transform. I'll have to look into it.
+https://github.com/S6Regen/Walsh-Hadamard-Transform-Algorithms
+
