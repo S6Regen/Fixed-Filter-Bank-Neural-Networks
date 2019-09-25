@@ -32,13 +32,13 @@ When it is off you get zero volts out.
 
 You can understand ReLU as an on off switch with its own decision making policy.
 
-The weighed sum of a number of weighted sums is still a linear system.
+The weighted sum of a number of weighted sums is still a linear system.
 
 For a particular input with a ReLU neural network the switches (ReLUs) are all in definite states, on or off.  The result is a particular arrangement of weighted sums of weighted sums of....
 
 There is a particular linear projection from a particular input to the output and for inputs in the neighborhood of the input that do not result in any switch changing state.
 
-An ReLU neural network then is a system of switched linear projections.
+A ReLU neural network then is a system of switched linear projections.
 
 Since switching happens at zero there are no sudden discontinuities in the output as the input gradually changes.  
 
