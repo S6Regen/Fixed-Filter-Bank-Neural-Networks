@@ -25,6 +25,7 @@ It is possible there are even more efficient projection switching systems, perha
 https://github.com/S6Regen/Walsh-Hadamard-Transform-Algorithms
 
 Just in case you don't understand ReLU as a switch:
+
 "When a switch is on 1 volt in gives 1 volt out, n volts in gives n volts out. 
 
 When it is off you get zero volts out.
