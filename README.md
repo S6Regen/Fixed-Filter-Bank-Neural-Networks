@@ -24,3 +24,14 @@ A common thread here is that a conventional artificial neural network with the R
 It is possible there are even more efficient projection switching systems, perhaps based on the hstep() function in the out of place Walsh Hadamard transform. I'll have to look into it.
 https://github.com/S6Regen/Walsh-Hadamard-Transform-Algorithms
 
+Just in case you don't understand ReLU as a switch:
+"When a switch is on 1 volt in gives 1 volt out, n volts in gives n volts out.  
+When it is off you get zero volts out.
+You can understand ReLU as an on off switch with its own decision making policy.
+The weighed sum of a number of weighted sums is still a linear system.
+For a particular input with a ReLU neural network the switches (ReLUs) are all in definite states, on or off.  The result is a particular arrangement of weighted sums of weighted sums of....
+There is a particular linear projection from a particular input to the output and for inputs in the neighborhood of the input that do not result in any switch changing state.
+An ReLU neural network then is a system of switched linear projections.
+Since switching happens at zero there are no sudden discontinuities in the output as the input gradually changes.  
+For a particular input and a particular output neuron the output is a weighted sum of weighted sums of...  of the input.  This can be converted to a single weighted sum.
+You can examine that single weighted sum to see what the networks is looking at in the input.  Or you can calculate some metrics like the angle between the input vector and the weight vector of the single weighted sum."
