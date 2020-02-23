@@ -45,3 +45,5 @@ Since switching happens at zero there are no sudden discontinuities in the outpu
 For a particular input and a particular output neuron the output is a weighted sum of weighted sums of...  of the input.  This can be converted to a single weighted sum.
 
 You can examine that single weighted sum to see what the networks is looking at in the input.  Or you can calculate some metrics like the angle between the input vector and the weight vector of the single weighted sum."
+
+Further information: https://ai462qqq.blogspot.com/2019/11/artificial-neural-networks.html
